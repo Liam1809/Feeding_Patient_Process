@@ -413,12 +413,69 @@ def Ranking():
         # 3 NONE between
         elif distance2 == 3 or distance1 == 0:
             score -= 1
+# Task B                    
+# method to display the process of 5 days cycle         
+def Display():
+    # empty list
+    String = list()
+    # initialise a for loop to save 5 days cycle into an empty list
+    for i in range(len(Patient_list)):
+        # print(Patient_list[i].FIVEDAYS[1:])
+        String.append(Patient_list[i].FIVEDAYS[1:])
+    # print(*String, sep = "\n")
+    # Print out 4 days cycle of patients 
+    for day in range(1,5):
+          print("AT THE END OF DAY " + str(day))
+          print("DAY " + str(day) + "\n")
+          for i in range(len(Patient_list)):
+                Patient_num = "PATIENT " + Patient_list[i].getName()
+                # get day 1 Issue
+                a = String[i][0]
+                # get day 2 Issue
+                b = String[i][1]
+                # get day 3 Issue
+                c = String[i][2]
+                # get day 4 Issue
+                d = String[i][3]   
+                if day == 1:
+                     print(Patient_num  + " - " + a)
+                if day == 2:
+                     print(Patient_num  + " - " + a + "," + b)
+                if day == 3:
+                     print(Patient_num  + " - " + a + "," + b + "," + c)
+                if day == 4:
+                     print(Patient_num  + " - " + a + "," + b + "," + c + "," + d)  
+          print("\n")
+    #print out the fifth day of cycle of patients    
+    Selection_Sort()
+    # empty list
+    New_String = list()
+    for i in range(len(Patient_list)):
+        # print(Patient_list[i].FIVEDAYS[1:])
+        New_String.append(Patient_list[i].FIVEDAYS[1:])
+    # print(*String, sep = "\n")
+    print("AT THE END OF DAY 5")
+    print("DAY 5 \n")
+    for i in range(len(Patient_list)):
+        Patient_num = "PATIENT " + Patient_list[i].getName()
+        # get day 1 Issue
+        a = New_String[i][0]
+        # get day 2 Issue
+        b = New_String[i][1]
+        # get day 3 Issue
+        c = New_String[i][2]
+        # get day 4 Issue
+        d = New_String[i][3] 
+        # get day 5 Issue
+        e = New_String[i][4]
+        print(Patient_num  + " - " + a + "," + b + "," + c + "," + d + "," + e) 
 # main method              
 def main():
          # calling methods
          Access_data()
          Feeding_Process()
          Ranking()
+         Display()
            
          
 # call main method        
