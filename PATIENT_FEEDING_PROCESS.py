@@ -125,4 +125,174 @@ def Access_data():
                  if day == 5 and hour == 24:
                      break # break out of loop
              # add each patient object to Patient_list
-             Patient_list.append(patient)        
+             Patient_list.append(patient)   
+# Task A + B                   
+def Feeding_Process():
+    # declare some amount of feeding 
+    Feeding_Amount_1 = "5ML /2 HRS" 
+    Feeding_Amount_2 = "10ML /2 HRS" 
+    Feeding_Amount_3 = "20ML /2 HRS"
+    Feeding_Amount_4 = "30ML /2 HRS"
+    # declare some issues
+    Issue_1 = "NONE"
+    Issue_2 = "FEEDING STOPPED"
+    Issue_3 = "REFER TO DIETICIAN"
+    # looping through Patient_list
+    for i in range(len(Patient_list)):
+        # assign each object in Patient_list at index i to patient variable
+        patient = Patient_list[i]
+        # get patient's normal GRV and assign it to GRV_Patient
+        GRV_Patient = patient.getPatientGRV()
+        # declare counter for HR and LR patients
+        counter1 = 0
+        counter2 = 0
+        # declare get_days = 0
+        get_Days = 0
+    
+        #HR patient
+        # get patient's Status if equals to "HR"
+        if patient.getPatientStatus() == "HR":
+            # looping from day 1 to day 5
+            for day in range(1, 6):
+                # looping from 0 hour to 23 hour
+                for hour in range(24):
+                    # day equals to 1
+                     if day == 1:
+                          # set patient's Feeding Status with 1ML /1 HR 
+                         patient.setFeedingStatus(day,hour,patient.getFeedingStatus(1,0))
+                    # day 4 and hour < 3
+                     elif day == 4 and hour < 3:
+                         # set patient's Issue Status with NONE
+                         patient.setIssueStatus(day, hour, Issue_1)
+                         # hour 0 or hour 2
+                         if hour == 0 or hour == 2:
+                              # set patient's Feeding Status with 5ML /2 HRS 
+                             patient.setFeedingStatus(day, hour, Feeding_Amount_1)
+                    # if GRV_Status equals to nothing
+                     else:
+                         # get patient's GRV status which is stored in GRV table and assign it to GRV_Status
+                         GRV_Status = patient.getGRVStatus(day, hour)                   
+                         # if GRV_Status not equals to nothing
+                         if GRV_Status != "":
+                             # if GRV_Status less than or equal to GRV_Patient
+                             if GRV_Status <= GRV_Patient:
+                                  # set patient's Feeding Status with 10ML /2 HRS 
+                                  patient.setFeedingStatus(day, hour, Feeding_Amount_2)
+                                  # set patient's Issue Status with NONE
+                                  patient.setIssueStatus(day, hour, Issue_1) 
+                             # if GRV_Status greater than GRV_Patient
+                             elif GRV_Status > GRV_Patient:
+                                 # set patient's Feeding Status with NO FEEDING
+                                  patient.setFeedingStatus(day, hour, "NO FEEDING")
+                                  # For every 2 FEEDING STOPPED we get 1 REFER TO DIETICIAN                             
+                                  if counter1 < 2:
+                                         # set patient's Issue Status with FEEDING STOPPED
+                                         patient.setIssueStatus(day, hour, Issue_2)
+                                         counter1 += 1 # add counter1 by 1
+                                  # if counter2 > 2 we only get REFER TO DIETICIAN
+                                  else:  
+                                         # set patient's Issue Status with REFER TO DIETICIAN
+                                         patient.setIssueStatus(day, hour, Issue_3)
+                     # get patient's IssueStatus if equals to NONE                   
+                     if patient.getIssueStatus(day, hour) == "NONE":
+                        counter1 = 0 # reset counter1
+                    # save patient's Issue at the end of each day for TASK B + C
+                     # get patient's IssueStatus if not equals to ""
+                     if patient.getIssueStatus(day, hour) != "":
+                          # get patient's Issue then assign to get_Days
+                          get_Days = patient.getIssueStatus(day,hour)
+                # save patient's Issue at the end of each day for TASK B + C
+                patient.setDAYS(day,get_Days)           
+                counter1 = 0 # reset counter1   
+                get_Days = 0 # reset get_Days  
+                               
+        # LR patient
+        # get patient's Status if equals to "LR"
+        if patient.getPatientStatus() == "LR":
+            # looping from day 1 to day 5
+            for day in range(1, 6):
+                # looping from 0 hour to 23 hour
+                for hour in range(24):
+                    # day == 1 and hour less than 4 and that hour is even ( Patient's Issues are NONE at 4 hours on day 1)
+                     if day == 1 and hour < 4 and hour % 2 == 0:
+                         # set patient's Issue Status with NONE
+                         patient.setIssueStatus(day, hour, Issue_1)
+                     else:
+                         # get patient's GRV status which is stored in GRV table and assign it to GRV_Status
+                         GRV_Status = patient.getGRVStatus(day, hour)
+                         # if GRV_Status equals to something
+                         if GRV_Status != "":
+                                 # if GRV_Status less than or equal to GRV_Patient
+                                 if GRV_Status <= GRV_Patient:
+                                      # set patient's Issue Status with NONE
+                                      patient.setIssueStatus(day, hour, Issue_1)
+                                      # patient's weight < 40
+                                      if patient.getWeight() < 40:
+                                          # set patient's Feeding Status with 10ML /2 HRS 
+                                          patient.setFeedingStatus(day, hour, Feeding_Amount_2)  
+                                      # patient's weight > 40  
+                                      else:
+                                          # patient's weight > 40 but has 5ML /2 HRS on day 1 at hour 4
+                                          if patient.getFeedingStatus(1,0) == Feeding_Amount_1 and day == 1 and hour == 4:
+                                              # set patient's Feeding Status with 10ML /2 HRS
+                                              patient.setFeedingStatus(day, hour, Feeding_Amount_2)
+                                          else:
+                                              # set patient's Feeding Status with 30ML /2 HRS
+                                              patient.setFeedingStatus(day, hour, Feeding_Amount_4)
+                                 # if GRV_Status greater than GRV_Patient
+                                 elif GRV_Status > GRV_Patient:
+                                       # set patient's Feeding Status with NO FEEDING
+                                       patient.setFeedingStatus(day, hour, "NO FEEDING")
+                                       # hour equals to 0
+                                       if hour == 0:
+                                          # set patient's Issue Status with REFER TO DIETICIAN
+                                          patient.setIssueStatus(day, hour, Issue_3)
+                                        # For every 2 FEEDING STOPPED we get 1 REFER TO DIETICIAN
+                                       elif counter2 < 2:
+                                          # set patient's Issue Status with FEEDING STOPPED
+                                          patient.setIssueStatus(day, hour, Issue_2)
+                                          counter2 += 1 # add counter2 by 1
+                                        # if counter2 > 2 we only get REFER TO DIETICIAN
+                                       else:
+                                          # set patient's Issue Status with REFER TO DIETICIAN
+                                          patient.setIssueStatus(day, hour, Issue_3)
+                         # if GRV_Status equals to nothing
+                         else:  
+                                 # get patient's name if equals to B1
+                                 if patient.getName() == "B1":
+                                     # if hour is even and less than 20
+                                     if hour % 2 == 0 and hour < 20:
+                                         # if day is less than 5 and hour is less than 16
+                                         if day < 5 and hour < 16:
+                                             # set patient's Issue status with NONE
+                                             patient.setIssueStatus(day, hour, Issue_1)
+                                # if hour is even and hour < 20
+                                 elif hour % 2 == 0 and hour < 20:
+                                     # set patient's Issue Status with NONE
+                                    patient.setIssueStatus(day, hour, Issue_1)
+                                    # patient's weight < 40
+                                    if patient.getWeight() < 40:
+                                        # set patient's Feeding Status with 10ML /2 HRS
+                                        patient.setFeedingStatus(day, hour, Feeding_Amount_2)
+                                    # patient's weight > 40
+                                    else:
+                                        # patient's weight > 40 but has 5ML /2 HRS on day 1 at hour 6
+                                        if patient.getFeedingStatus(1,0) == Feeding_Amount_1 and day == 1 and hour == 6:
+                                           # set patient's Feeding Status with 20ML /2 HRS
+                                           patient.setFeedingStatus(day, hour,Feeding_Amount_3)
+                                        else:
+                                          # set patient's Feeding Status with 30ML /2 HRS
+                                          patient.setFeedingStatus(day, hour, Feeding_Amount_4)
+                     # save patient's Issue at the end of each day for TASK B + C
+                     # get patient's Issue Status if not equals to ""
+                     if patient.getIssueStatus(day, hour) != "":
+                          # get patient's Issue then assign to get_Days
+                          get_Days = patient.getIssueStatus(day,hour)
+                # save patient's Issue at the end of each day for TASK B + C     
+                patient.setDAYS(day,get_Days)
+                # if patient's name equals to B1 and day equals to 5
+                if patient.getName() == "B1" and day == 5:
+                         # save patient's Issue at day 5 with ""
+                         patient.setDAYS(day, "")       
+                counter2 = 0 # reset counter2
+                get_Days = 0 # reset get_Day       
