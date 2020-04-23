@@ -413,4 +413,30 @@ def Ranking():
         # 3 NONE between
         elif distance2 == 3 or distance1 == 0:
             score -= 1
-            
+# main method              
+def main():
+         # calling methods
+         Access_data()
+         Feeding_Process()
+         Ranking()
+           
+         
+# call main method        
+main()
+
+# UNCOMMENT CODES BELOW TO CHECK INTERNAL TABLES OF A PATIENT OBJECT
+# for i in range(len(Patient_list)):
+#     print("Patient " + Patient_Number[i])
+#     print("FEEDING TABLE")
+#     print(*Patient_list[i].Feeding[1:], sep = "\n")
+#     print("-----------------")
+#     print("GRV TABLE")
+#     print(*Patient_list[i].GRV[1:] , sep = "\n")
+#     print("-----------------")
+#     print("ISSUE TABLE")
+#     print(*Patient_list[i].Issue[1:] , sep = "\n")
+#     print("-----------------")
+#     print("FIVEDAYS")
+#     print(Patient_list[i].FIVEDAYS[1:])
+#     print("-----------------")
+     
