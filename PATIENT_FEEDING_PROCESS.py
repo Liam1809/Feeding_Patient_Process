@@ -296,3 +296,108 @@ def Feeding_Process():
                          patient.setDAYS(day, "")       
                 counter2 = 0 # reset counter2
                 get_Days = 0 # reset get_Day       
+
+# Task C                              
+# method to score patient in Patient_list based on their rate improvement through 5 days cycle
+# the idea is to score them based on their Feeding Status at the end of each day
+# Patient with higher NONE gets higher score and decrease with times of FEEDING STOPPED AND REFER TO DIETICIAN
+# There is also a score classification betwen FS and FS/RD or RD and FS/RD                  
+def Ranking():
+    # looping through Patient_list
+    for i in range(len(Patient_list)):
+        # assign each object in Patient_list at index i to patient variable
+        patient = Patient_list[i]
+        # declare score
+        score = 0
+        # declare initial score of 20, the highest score a patient can reach is 100( for 5 days)
+        initscore = 20
+        # declare FEEDING STOPPED with 1 point and REFER TO DIETICIAN with 2 points
+        No = 1 # No for "" Issue
+        FS = 2
+        RD = 3
+        # declare distance1, distance2 for FS and RD 
+        distance1 = 0
+        distance2 = 0
+        # declare flag1, flag2 for FS and RD
+        flag1 = False
+        flag2 = False
+        # looping from day 1 to day 5
+        for day in range(1,6):
+            if patient.getDAYS(day) == "":
+                score += initscore - No 
+            # if getDAYS at specific day of patient object equals to NONE
+            if patient.getDAYS(day) == "NONE" :
+                 # add initscore to score
+                 score += initscore      
+            # if getDAYS at specific day of patient object equals to FEEDING STOPPED
+            if patient.getDAYS(day)  == "FEEDING STOPPED":
+                  # add initscore and misnus FS to score
+                  score += initscore - FS 
+                  # looping from (day + 1) to day 5 
+                  for i in range(day + 1,6):
+                         # if we get FS in the next day and distance1 == 0
+                         if patient.getDAYS(i) == "FEEDING STOPPED": 
+                             flag1 = True # set flag1 to True
+                             break # break out of loop
+                         # if we get RD in the next day and distance1 == 0
+                         elif patient.getDAYS(i) == "REFER TO DIETICIAN": 
+                             flag2 = True # set flag2 to True
+                             break # break out of loop
+                         # if we get NONE in the next day
+                         elif patient.getDAYS(i) == "NONE":
+                             distance1 += 1 # add distance1 by 1
+                  # if flag1 equals to True     
+                  if flag1 == True:
+                      # score minus FS
+                      score -= FS
+                      # set flag1 back to False
+                      flag1 = False
+                  # if flag2 equals to True
+                  if flag2 == True:
+                      # score minus RD
+                      score -= RD
+                      # set flag2 back to False
+                      flag2 = False
+            # if getDAYS at specific day of patient object equals to REFER TO DIETICIAN
+            if patient.getDAYS(day) == "REFER TO DIETICIAN":
+                  # add initscore and minus RD to score
+                  score += initscore - RD 
+                  # looping from (day + 1) to day 5 
+                  for i in range(day + 1,6):
+                      # if we get FS in the next day and distance2 == 0
+                      if patient.getDAYS(i) == "FEEDING STOPPED": 
+                         flag1 = True # set flag1 to True
+                         break # break out of loop
+                      # if we get RD in the next day and distance2 == 0
+                      elif patient.getDAYS(i) == "REFER TO DIETICIAN":
+                         flag2 = True # set flag2 to True
+                         break # break out of loop
+                      elif patient.getDAYS(i) == "NONE":
+                         distance2 += 1 # add distance2 by 1                        
+                  # if flag1 equals to True     
+                  if flag1 == True:
+                      # score minus FS
+                      score -= FS
+                      # set flag1 back to False
+                      flag1 = False
+                  # if flag2 equals to True
+                  if flag2 == True:
+                      # score minus RD
+                      score -= RD
+                      # set flag2 back to False
+                      flag2 = False
+            # save each patient's score
+            patient.setscore(score)
+        # No NONE between
+        if distance2 == 0 or distance1 == 0:
+            score -= 4
+        # 1 NONE between
+        elif distance2 == 1 or distance1 == 0:
+            score -= 3
+        # 2 NONE between
+        elif distance2 == 2 or distance1 == 0:
+            score -= 2
+        # 3 NONE between
+        elif distance2 == 3 or distance1 == 0:
+            score -= 1
+            
