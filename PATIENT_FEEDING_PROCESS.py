@@ -296,7 +296,20 @@ def Feeding_Process():
                          patient.setDAYS(day, "")       
                 counter2 = 0 # reset counter2
                 get_Days = 0 # reset get_Day       
-
+#Task C
+ # Selection_sort method to sort score of each patient in Descending order      
+def Selection_Sort():
+       # Using two for loops 
+       for i in range(len(Patient_list)) :
+              max_character = i
+              for  j in range(i+1,len(Patient_list)) :
+                    # compare the scores bewteen patients 
+                    if Patient_list[max_character].getscore() < Patient_list[j].getscore():
+                          max_character = j
+              # swap
+              temp = Patient_list[i]
+              Patient_list[i] = Patient_list[max_character]
+              Patient_list[max_character] = temp     
 # Task C                              
 # method to score patient in Patient_list based on their rate improvement through 5 days cycle
 # the idea is to score them based on their Feeding Status at the end of each day
